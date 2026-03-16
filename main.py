@@ -3,14 +3,16 @@ import argparse
 from load_data import load_dataset
 from preprocess import preprocess_data
 from feature_selection import select_features
-from train import train_model
+from train import train_model, train_baseline_model
 from eda import run_eda
+from visualize import plot_ml_explanation
 
 def main():
     parser = argparse.ArgumentParser(description="House Price Prediction")
     # Thay đổi đường dẫn mặc định nếu cần
-    parser.add_argument("--data", type=str, default=r"C:\Users\nhatk\Desktop\dataset\House_Price_dataset.csv", help="Path to the dataset")
+    parser.add_argument("--data", type=str, default=r"C:\Users\nhatk\Desktop\ML Predicted House\House_Price_dataset.csv", help="Path to the dataset")
     parser.add_argument("--eda", action="store_true", help="Run Exploratory Data Analysis and show plots")
+    parser.add_argument("--plots", action=argparse.BooleanOptionalAction, default=True, help="Show/hide presentation plots")
     args = parser.parse_args()
 
     data_path = args.data
@@ -33,16 +35,26 @@ def main():
     print("Data preprocessed successfully.\n")
     
     print("Selecting features...")
-    feature_names = select_features(df_final)
+    feature_names = select_features(df_final, plot=args.plots)
     print(f"Selected {len(feature_names)} features: {feature_names}\n")
     
-    print("Training model...")
-    model, predictions, y_test, rmse = train_model(df_final, feature_names)
+    print("--- Training Baseline Model (1 Variable: area) ---")
+    base_model, base_preds, base_y_test, base_rmse, base_r2 = train_baseline_model(df_final, plot=args.plots)
+    print(f"Baseline - RMSE: {base_rmse:.4f}, R-squared: {base_r2:.4f}\n")
+    
+    print("--- Training Multi-variable Model ---")
+    model, predictions, y_test, rmse, r2 = train_model(df_final, feature_names, plot=args.plots)
     
     print("Train thành công!\n")
     print(f"Actual log-price of a house: {y_test.iloc[0]:.4f}")
     print(f"Model Predicted log-price Value: {predictions[0]:.4f}")
     print(f"RMSE (Root Mean Squared Error): {rmse:.4f}")
+    print(f"Hệ số R-squared: {r2:.4f}")
+    
+    if args.plots:
+        print("\n--- Hiện thị biểu đồ giải thích ML (educational visualizations) ---")
+        X_test_df = df_final[feature_names].iloc[y_test.index]
+        plot_ml_explanation(df_final, feature_names, model, X_test_df, y_test, predictions)
 
 if __name__ == "__main__":
     main()
