@@ -11,8 +11,8 @@ from evaluate import run_evaluation
 def main():
     parser = argparse.ArgumentParser(description="House Price Prediction")
     # Thay đổi đường dẫn mặc định nếu cần
-    parser.add_argument("--data", type=str, default=r"C:\Users\nhatk\Desktop\ML Predicted House\House_Price_dataset.csv", help="Path to the dataset")
-    parser.add_argument("--eda", action="store_true", help="Run Exploratory Data Analysis and show plots")
+    parser.add_argument("--data", type=str, default=r"C:\Users\nhatk\Desktop\Machine-Learning-Predicted-House-main\Machine-Learning-Predicted-House-main\House_Price_dataset.csv", help="Path to the dataset")
+    parser.add_argument("--eda", action=argparse.BooleanOptionalAction, default=True, help="Run Exploratory Data Analysis and show plots")
     parser.add_argument("--plots", action=argparse.BooleanOptionalAction, default=True, help="Show/hide presentation plots")
     args = parser.parse_args()
 
@@ -46,18 +46,18 @@ def main():
     print("--- Training Multi-variable Model ---")
     model, predictions, y_test, rmse, r2 = train_model(df_final, feature_names, plot=args.plots)
     
-    print("Train thanh cong!\n")
+    print("Train thành công!\n")
     print(f"Actual log-price of a house: {y_test.iloc[0]:.4f}")
     print(f"Model Predicted log-price Value: {predictions[0]:.4f}")
     print(f"RMSE (Root Mean Squared Error): {rmse:.4f}")
-    print(f"He so R-squared: {r2:.4f}")
+    print(f"Hệ số R-squared: {r2:.4f}")
     
     if args.plots:
-        print("\n--- Hien thi bieu do giai thich ML (educational visualizations) ---")
+        print("\n--- Hiện thị biểu đồ giải thích ML (educational visualizations) ---")
         X_test_df = df_final[feature_names].iloc[y_test.index]
         plot_ml_explanation(df_final, feature_names, model, X_test_df, y_test, predictions)
 
-        # === PHAN 3: Danh gia & Output Analysis ===
+        # === PHẦN 3: Đánh giá & Output Analysis ===
         from sklearn.model_selection import train_test_split
         X_all = df_final[feature_names]
         y_all = df_final['price']

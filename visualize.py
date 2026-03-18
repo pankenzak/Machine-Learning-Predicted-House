@@ -210,7 +210,7 @@ def plot_pipeline(ax_ext=None):
         fontsize=12, fontweight='bold'
     )
     plt.tight_layout()
-    return _save(fig, "06_ml_pipeline.png", "Quy trinh ML — 6 buoc tong the")
+    return _save(fig, "06_ml_pipeline.png", "Quy trinh ML — 6 buoc tong extreme the")
 
 
 def plot_beta_coefficients(model, feature_names):
@@ -252,7 +252,7 @@ def plot_ml_explanation(df_final, feature_names, model, X_test, y_test, predicti
     plot_sse_decomposition(y_test, predictions)
     plot_pipeline()
     plot_beta_coefficients(model, feature_names)
-    print(f"\nXong! Tat ca {6} anh da duoc luu vao thu muc: {OUTPUT_DIR}")
+    print(f"\nXong! Tất cả 7 ảnh (bao gồm cả ảnh 01 vẽ ở bước chọn biến) đã được lưu vào thư mục: {OUTPUT_DIR}")
 
 
 def r2_val(y_test, predictions):
